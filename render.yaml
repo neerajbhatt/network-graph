@@ -8,7 +8,7 @@ services:
   - type: web
     name: network-graph-api
     runtime: python
-    plan: free
+    plan: starter
     rootDir: backend
     buildCommand: chmod +x build.sh && bash build.sh
     startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
@@ -23,10 +23,8 @@ services:
         value: "3.11.0"
     healthCheckPath: /api/network-graph/healthz
 
-  - type: web
+  - type: static_site
     name: network-graph-web
-    runtime: static
-    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
