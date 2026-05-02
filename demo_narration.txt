@@ -1,0 +1,73 @@
+Welcome to Network Graph — a pharmacy fraud and abuse detection platform built for Optum. This tool surfaces suspicious patterns in controlled substance claims, helping investigators prioritize high-risk prescribers, pharmacies, and members.
+
+Let me walk you through the portal.
+
+When you first land on the dashboard, you'll notice four KPI cards at the top. These are visible on every tab and give you an instant pulse of the data. Controlled Claims shows the total pharmacy claims involving controlled or commonly abused drugs. Dollar Exposure shows the total paid amount across those claims — this is your financial risk. Members shows the count of unique individuals filling controlled substances. And Flagged shows how many fills our detection engine has flagged for review.
+
+Now let's dive into the five tabs, starting with the most powerful one — Networks.
+
+The Networks tab visualizes prescriber-pharmacy relationships as a force-directed graph. Blue circles represent prescribers. Purple circles represent pharmacies. The lines connecting them represent shared members — patients who filled controlled drugs at that specific prescriber-pharmacy pair.
+
+What makes this powerful is the visual encoding. Line color indicates risk — red means HIGH risk, yellow means MEDIUM, and green means LOW. Line thickness shows the number of shared members. So a thick red line between a prescriber and a pharmacy means they share an unusually high number of patients filling controlled substances — a strong signal of potential collusion.
+
+On the left panel, you have filters. You can filter by risk bucket — let me select HIGH to show only the most suspicious pairs. You can filter by drug class — for example, focusing only on Opioids. And you can set a minimum shared member count to cut through the noise.
+
+After clicking Apply Filters, the graph updates. Notice the thick red lines — these prescriber-pharmacy pairs share over 60 members on controlled drugs. This is exactly what investigators need to see first.
+
+Now, when I click on any node — say this prescriber — a drill-down panel opens on the right. It shows every member connected to this prescriber, along with their fill history: drug name, date, and paid amount. This lets investigators quickly assess whether the pattern looks like legitimate prescribing or potential fraud.
+
+Look for hub nodes with many connections — a single prescriber sending patients to many pharmacies, or one pharmacy receiving from many prescribers. Also look for tight clusters where prescribers and pharmacies only refer to each other — that's a classic ring pattern.
+
+Let's move to Tab 2 — Doctor Shoppers.
+
+Doctor shopping is when a member visits multiple pharmacies or prescribers to obtain controlled substances. This tab surfaces those members in a sortable table.
+
+Each row shows the member's state, how many pharmacies they visited, how many prescribers they saw, their total fill count, dollar exposure, and risk level. Members with 5 or more pharmacies or 5 or more prescribers are flagged as HIGH risk.
+
+You can sort by any column. Let me sort by Dollar Exposure descending — now we see the highest-cost shoppers at the top. These are members potentially obtaining drugs to resell.
+
+Clicking any row opens a detail panel showing the full activity breakdown: pharmacy count, prescriber count, date range, and total exposure. Members with short date ranges but high fill counts show a rapid escalation pattern — that's a red flag.
+
+The key insight here is cross-referencing. If a member appears as both a doctor shopper AND shows up connected to a HIGH-risk network pair, that's a double signal worth investigating immediately.
+
+Now let's look at Tab 3 — Pharmacy Hubs.
+
+This tab identifies pharmacies receiving controlled-substance prescriptions from an unusually high number of distinct prescribers. A small independent pharmacy with 20 or more prescribers sending controlled drug scripts is highly suspicious.
+
+On the left, you see a horizontal bar chart showing the top 20 pharmacies by prescriber count, color-coded by risk. On the right, a detailed table with prescriber counts, member counts, total claims, and dollar exposure.
+
+Pharmacies flagged as HIGH have 20 or more distinct prescribers. MEDIUM is 10 to 19. This view lets you quickly spot which pharmacies deserve a closer look. Compare the pharmacy type — independent pharmacies appearing as major hubs warrant the highest scrutiny.
+
+If a pharmacy shows high prescriber counts but relatively few unique members, that could indicate a kickback scheme where prescribers are being incentivized to send scripts to that specific pharmacy.
+
+Moving on to Tab 4 — Geo Outliers.
+
+This is where geography tells the story. The Geo Outliers tab flags pharmacy fills where the member traveled an unusually long distance. Why would someone drive 150 miles past dozens of pharmacies to fill a controlled substance prescription? That's the question this tab helps answer.
+
+On the left, you see an interactive map. Blue dots are member home locations. Purple dots are pharmacy locations. Lines connect members to pharmacies, colored by risk — red for the longest distances.
+
+On the right, a sortable table shows every flagged fill with the member, pharmacy, drug name, distance in miles, and risk level. Members traveling over 150 miles are flagged as HIGH risk.
+
+Zoom into the map and look for long red lines crossing state boundaries. Members who cross state lines may be exploiting different state prescription monitoring programs that don't share data. Multiple fills at the same distant pharmacy show an established pattern — not a one-time trip.
+
+The most powerful finding? Members who appear on both the Geo Outliers tab AND the Doctor Shoppers tab. They're visiting multiple providers AND traveling long distances — the strongest combined signal of drug diversion.
+
+Finally, Tab 5 — Config.
+
+The Config tab puts detection thresholds in your hands. Every rule in the detection engine is configurable here — no code changes needed.
+
+For suspicious fills, you can adjust the lookback window — how many days before a pharmacy fill we check for a supporting doctor visit. The default is 30 days, with gabapentinoids at 45 days due to chronic pain patterns.
+
+For network buckets, you can set what constitutes HIGH risk — the default is 60 shared members — and MEDIUM risk at 20.
+
+For doctor shopping, the minimum pharmacy and prescriber counts. For pharmacy hubs, the prescriber threshold. And for geo anomalies, the distance in miles and the statistical percentile.
+
+If you're seeing too many false positives, increase the thresholds. If you're missing known cases, decrease them. Changes save to the database immediately and take effect on the next detection run.
+
+Let me share the recommended investigation workflow.
+
+Start with the KPI cards — if the flagged count is very high relative to total claims, your thresholds may be too loose. Next, go to the Networks tab, filter to HIGH risk, and identify the strongest prescriber-pharmacy pairs. Then check Doctor Shoppers to find the highest-exposure members. Cross-reference with Pharmacy Hubs to validate suspicious pharmacies. Use Geo Outliers to check for state-line shopping. Finally, document the member IDs, prescribers, pharmacies, which rules flagged them, and the total dollar exposure — and refer to your Special Investigations Unit.
+
+Network Graph transforms millions of pharmacy claims into actionable intelligence. Instead of searching for needles in a haystack, investigators see the patterns that matter — the collusive rings, the doctor shoppers, the hub pharmacies, and the geographic anomalies — all in one unified platform.
+
+Thank you for watching. The portal is live and ready for your team to explore.

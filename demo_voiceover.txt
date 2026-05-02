@@ -1,0 +1,45 @@
+This is Network Graph — a fully functional pharmacy fraud and abuse detection application. I want to emphasize — this is not a prototype. This is a complete, production-grade application with a React frontend, a FastAPI middleware layer, and a PostgreSQL backend — all deployed live on the cloud. It is currently running against 40,000 synthetic pharmacy claims with planted fraud patterns, and it can be converted to an enterprise application connected to real claims data with minimal effort.
+
+Let me walk you through it.
+
+You're looking at the Networks tab — the centerpiece of the platform. At the top, four KPI cards give you an instant snapshot. Over 25,000 controlled substance claims, 7 million dollars in exposure, nearly 9,000 members, and over 42,000 fills flagged by our detection engine.
+
+The graph below visualizes prescriber-pharmacy relationships. Blue circles are prescribers. Purple circles are pharmacies. The lines connecting them represent shared members filling controlled drugs. You can see 284 nodes and 200 edges on screen right now.
+
+Notice the color coding in the legend on the left. Red lines mean HIGH risk — these are pairs sharing an unusually high number of members. Yellow lines are MEDIUM risk, and green lines are LOW. The thicker the line, the more members that prescriber-pharmacy pair shares.
+
+On the left panel, we have filters — Risk Bucket, Drug Class, and Minimum Shared Members. Let me filter to MEDIUM risk to focus the view.
+
+Now we're looking at 20 nodes and 10 edges — just the medium-risk prescriber-pharmacy pairs. The graph is much cleaner and easier to investigate.
+
+When I click on a pharmacy node — here's Publix number 7482 — a drill-down panel opens on the right showing 147 connected members. You can see each member's name, the drug they filled, the date, and the dollar amount. For example, Tammy James filled Clonazepam for 730 dollars. Rebecca Chandler filled Cyclobenzaprine for 210 dollars.
+
+Now clicking on a prescriber — Dr. Davidson — shows 103 members connected to this doctor. The drill panel reveals detailed fill histories. Timothy Davis had three fills across Hydrocodone, Cyclobenzaprine, and Oxycodone within a one-month span — that's a red flag. Laurie Robinson filled both Amphetamine Salts and Alprazolam — a stimulant and a benzodiazepine — at the same doctor.
+
+This is the kind of granular, actionable detail that investigators need.
+
+Now let's move to the Doctor Shoppers tab. This surfaces members visiting multiple pharmacies and prescribers to obtain controlled substances. We have 4,024 results.
+
+Look at the top row — David Arias Junior from Texas. He visited 13 different pharmacies and 10 different prescribers, accumulating 25 fills and over 11,000 dollars in exposure. That's flagged HIGH risk.
+
+Clicking his row opens the detail panel — Member ID 4020, active from July 2025 to December 2025. That's 13 pharmacies and 10 prescribers in just 5 months. Classic doctor shopping behavior.
+
+Below him, Michele Green, Randall Reid, Jason Wood, Pamela Smith — all HIGH risk, all with 7 or more pharmacies and thousands of dollars in exposure. These are the members your SIU team should be investigating first.
+
+Moving to Pharmacy Hubs. This identifies pharmacies receiving controlled substance prescriptions from an unusually high number of distinct prescribers.
+
+The bar chart on the left instantly shows you the top hubs. Walgreens number 1300 leads with 130 distinct prescribers and 138 members — over 42,000 dollars in exposure. All flagged HIGH. HEB 8252, Walgreens 7378, Rite Aid 1837 — all have over 125 prescribers each.
+
+The table on the right lets you sort and compare. When a single pharmacy receives controlled drug scripts from 130 different prescribers, that warrants a closer look — especially if it's an independent pharmacy rather than a large chain.
+
+Now the Geo Outliers tab — where geography tells the story. On the left, an interactive map shows member-to-pharmacy connections. Those red lines spanning the entire eastern United States represent members traveling extreme distances for controlled substance fills.
+
+Look at the table — Judy Patel from New York traveled 2,850 miles to Kroger number 3256 in California to fill Cyclobenzaprine. Courtney Irwin, also from New York, traveled 2,823 miles to the same California pharmacy for a Fentanyl patch. Why would someone travel nearly 3,000 miles past hundreds of pharmacies to fill a controlled substance?
+
+Over 25,000 geo-outlier results are flagged, all HIGH risk. Members crossing state lines may be exploiting gaps between state prescription monitoring programs. When you cross-reference these with the Doctor Shoppers tab, you find the highest-priority cases.
+
+Finally, the Config tab. Every detection threshold is configurable right here — no code changes needed. Network bucket thresholds, pharmacy hub minimums, suspicious fill lookback windows per drug class — gabapentinoids at 45 days, everything else at 30. Investigators can tune these thresholds based on their experience and the results they're seeing.
+
+To summarize — Network Graph is a complete, end-to-end fraud detection platform. A React frontend, FastAPI middleware, PostgreSQL database, five detection algorithms, all deployed and running live. It currently analyzes 40,000 synthetic claims with planted fraud patterns, delivering real detection results. With a simple configuration change, this connects to enterprise claims data and becomes a production investigation tool.
+
+Thank you for watching.
