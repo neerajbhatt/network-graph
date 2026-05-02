@@ -23,8 +23,10 @@ services:
         value: "3.11.0"
     healthCheckPath: /api/network-graph/healthz
 
-  - type: static_site
+  - type: web
     name: network-graph-web
+    runtime: static
+    plan: starter
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
