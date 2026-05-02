@@ -19,7 +19,7 @@ DEFAULT_DB_URL = os.getenv(
     "postgresql://postgres:postgres@localhost:5432/network_graph",
 )
 
-DATA_DIR = Path("data/synthetic")
+DATA_DIR = Path(os.getenv("DATA_DIR", "data/synthetic"))
 
 # Load order matters for FK constraints
 TABLES = [
@@ -36,8 +36,10 @@ TABLES = [
 def load_data(data_dir: Path, db_url: str) -> None:
     engine = sqlalchemy.create_engine(db_url)
 
-    # Run DDL
+    # Run DDL — try both local dev and Docker paths
     ddl_dir = Path("backend/sql/ddl")
+    if not ddl_dir.exists():
+        ddl_dir = Path("sql/ddl")
     ddl_files = sorted(ddl_dir.glob("*.sql"))
     with engine.connect() as conn:
         for ddl_file in ddl_files:
@@ -51,6 +53,8 @@ def load_data(data_dir: Path, db_url: str) -> None:
 
     # Run seed SQL
     seed_dir = Path("backend/sql/seed")
+    if not seed_dir.exists():
+        seed_dir = Path("sql/seed")
     seed_files = sorted(seed_dir.glob("*.sql"))
     with engine.connect() as conn:
         for seed_file in seed_files:
