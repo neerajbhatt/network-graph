@@ -1,4 +1,6 @@
-const API_BASE = '/api/network-graph';
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api/network-graph`
+  : '/api/network-graph';
 
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(`${API_BASE}${url}`);
