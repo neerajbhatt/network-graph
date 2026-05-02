@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import os
-from contextlib import asynccontextmanager
 from datetime import date
 from typing import Any
 
-import httpx
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,39 +33,11 @@ from api.models import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("network_graph")
 
-KEEP_ALIVE_INTERVAL = int(os.getenv("KEEP_ALIVE_INTERVAL", "780"))  # 13 minutes
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://network-graph-web.onrender.com")
-BACKEND_URL = os.getenv("BACKEND_URL", "https://network-graph-api-q6hf.onrender.com")
-
-
-async def _keep_alive_loop() -> None:
-    """Ping frontend and backend every 13 minutes to prevent Render free-tier sleep."""
-    await asyncio.sleep(60)  # wait for startup
-    while True:
-        try:
-            async with httpx.AsyncClient(timeout=30) as client:
-                r1 = await client.get(f"{BACKEND_URL}/api/network-graph/healthz")
-                logger.info("keep-alive: backend %s", r1.status_code)
-                r2 = await client.get(FRONTEND_URL)
-                logger.info("keep-alive: frontend %s", r2.status_code)
-        except Exception as exc:
-            logger.warning("keep-alive ping failed: %s", exc)
-        await asyncio.sleep(KEEP_ALIVE_INTERVAL)
-
-
-@asynccontextmanager
-async def lifespan(application: FastAPI):  # type: ignore[no-untyped-def]
-    task = asyncio.create_task(_keep_alive_loop())
-    yield
-    task.cancel()
-
-
 app = FastAPI(
     title="Network Graph API",
     description="Pharmacy Fraud & Abuse Detection Platform",
     version="0.1.0",
     root_path="/api/network-graph",
-    lifespan=lifespan,
 )
 
 app.add_middleware(
