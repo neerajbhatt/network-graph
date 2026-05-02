@@ -1,0 +1,42 @@
+databases:
+  - name: network-graph-db
+    plan: free
+    databaseName: network_graph
+    user: network_graph_user
+
+services:
+  - type: web
+    name: network-graph-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: chmod +x build.sh && bash build.sh
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: network-graph-db
+          property: connectionString
+      - key: DATA_MODE
+        value: SYNTHETIC
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+    healthCheckPath: /api/network-graph/healthz
+
+  - type: web
+    name: network-graph-web
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://network-graph-api.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
