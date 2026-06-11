@@ -1,1 +1,50 @@
+{
+  // Claude Code dev environment for GitHub Codespaces.
+  // Runs on a modern Codespaces CPU (has AVX) so the AVX/Bun crash
+  // from the local Pentium N5000 does not occur. We install Claude Code
+  // via npm (Node) which is the safe, AVX-independent path anyway.
+
+  "name": "claude-code-dev",
+
+  // Java base because of your java-sdk / MCP Java SDK work.
+  // Swap to a python or universal image if a project needs it.
+  "image": "mcr.microsoft.com/devcontainers/java:21",
+
+  "features": {
+    // Node LTS — required to run the npm-based Claude Code CLI.
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" },
+    // Handy if you spin up MCP servers / containers inside the box.
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // Start small to stay inside the free tier (120 core-hours/mo).
+  // 2-core in Codespaces already gives 8GB RAM — double your laptop.
+  // Bump cpus to 4 only when parallel sub-agents need it.
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+
+  // Auto-suspends after idle; raise/lower to control cost.
+  "idleTimeoutMinutes": 30,
+
+  // Install Claude Code once, on container build.
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && claude --version",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  // Run as the non-root 'vscode' user (Claude Code prefers this).
+  "remoteUser": "vscode"
+}
 
