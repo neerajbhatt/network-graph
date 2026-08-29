@@ -4,6 +4,8 @@
 
 Detect potential fraud, abuse, or misuse in pharmacy claims for controlled and commonly-abused drugs. Surface suspicious networks including doctor shopping, prescriber-pharmacy collusion, pharmacy hubs, and geographic anomalies.
 
+_Last updated: 2026-08-29_
+
 ## Quickstart
 
 ### Prerequisites
